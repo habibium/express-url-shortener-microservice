@@ -31,6 +31,13 @@ const UrlSchema = mongoose.Schema({
 
 const UrlModel = mongoose.model("url", UrlSchema);
 
+const insertUrl = async (original_url, short_url) =>
+  await UrlModel.create({
+    original_url,
+    short_url,
+  });
+
 module.exports = {
   UrlModel,
+  insertUrl,
 };
