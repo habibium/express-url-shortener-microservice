@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>URL Shortener Microservice</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>"
+    />
+    <link href="/public/style.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <h1>URL Shortener Microservice</h1>
+    <main>
+      <section>
+        <form action="api/shorturl" method="POST">
+          <fieldset>
+            <legend>URL Shortener</legend>
+            <label for="url_input">URL:</label>
+            <input
+              id="url_input"
+              type="text"
+              name="url"
+              placeholder="https://www.youtube.com/watch?v=xyz"
+            />
+            <input type="submit" value="POST URL" />
+          </fieldset>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <p>By <a href="https://habibium.com">Habibur Rahman</a></p>
+    </footer>
+  </body>
+</html>
