@@ -10,7 +10,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const dns = require("node:dns/promises");
-const { errRes } = require("./utils");
+const { errRes, isUrlValid } = require("./utils");
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -37,6 +37,8 @@ app.route("/api/shorturl").post(async (req, res) => {
   const url = req.body?.url;
 
   try {
+    if (!isUrlValid(url)) throw new TypeError();
+
     const parsedUrl = new URL(url);
     await dns.lookup(parsedUrl.hostname);
 
