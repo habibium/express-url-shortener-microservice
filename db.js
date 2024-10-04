@@ -16,4 +16,21 @@ class DB {
   }
 }
 
-module.exports = new DB();
+new DB();
+
+const UrlSchema = mongoose.Schema({
+  original_url: {
+    type: String,
+    required: true,
+  },
+  short_url: {
+    type: Number,
+    required: true,
+  },
+});
+
+const UrlModel = mongoose.model("url", UrlSchema);
+
+module.exports = {
+  UrlModel,
+};
