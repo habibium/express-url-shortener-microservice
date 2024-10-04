@@ -1,5 +1,10 @@
 require("dotenv").config();
-const { insertUrl, findOneByUrl, findMostRecentUrl } = require("./db");
+const {
+  insertUrl,
+  findOneByUrl,
+  findMostRecentUrl,
+  findOneByUrlId,
+} = require("./db");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -16,6 +21,16 @@ app.use("/public", express.static(`${process.cwd()}/public`));
 
 app.get("/", function (_req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
+});
+
+app.route("/api/shorturl/:id").get(async (req, res) => {
+  const urlId = +req.params?.id;
+  if (isNaN(urlId)) return res.json(errRes("Wrong format"));
+
+  const url = await findOneByUrlId(urlId);
+  if (!url) res.json(errRes("No short URL found for the given input"));
+
+  res.redirect(url?.original_url);
 });
 
 app.route("/api/shorturl").post(async (req, res) => {
@@ -45,9 +60,9 @@ app.route("/api/shorturl").post(async (req, res) => {
       short_url: newUrl?.short_url,
     });
   } catch (e) {
-    if (e instanceof TypeError) return res.json(errRes`Invalid URL`);
-    if (e?.code === "ENOTFOUND") return res.json(errRes`Invalid Hostname`);
-    return res.json(errRes`Unexpected Error`);
+    if (e instanceof TypeError) return res.json(errRes("Invalid URL"));
+    if (e?.code === "ENOTFOUND") return res.json(errRes("Invalid Hostname"));
+    return res.json(errRes("Unexpected Error"));
   }
 });
 
