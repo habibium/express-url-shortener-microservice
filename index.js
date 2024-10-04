@@ -25,10 +25,10 @@ app.get("/", function (_req, res) {
 
 app.route("/api/shorturl/:id").get(async (req, res) => {
   const urlId = +req.params?.id;
-  if (isNaN(urlId)) return res.json(errRes("Wrong format"));
+  if (isNaN(urlId)) return res.json(errRes("wrong format"));
 
   const url = await findOneByUrlId(urlId);
-  if (!url) return res.json(errRes("No short URL found for the given input"));
+  if (!url) return res.json(errRes("no short URL found for the given input"));
 
   return res.redirect(url?.original_url);
 });
@@ -60,9 +60,9 @@ app.route("/api/shorturl").post(async (req, res) => {
       short_url: newUrl?.short_url,
     });
   } catch (e) {
-    if (e instanceof TypeError) return res.json(errRes("Invalid URL"));
-    if (e?.code === "ENOTFOUND") return res.json(errRes("Invalid Hostname"));
-    return res.json(errRes("Unexpected Error"));
+    if (e instanceof TypeError) return res.json(errRes("invalid url"));
+    if (e?.code === "ENOTFOUND") return res.json(errRes("invalid hostname"));
+    return res.json(errRes("unexpected error"));
   }
 });
 
