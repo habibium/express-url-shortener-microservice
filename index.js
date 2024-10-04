@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { UrlModel } = require("./db");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -24,6 +25,11 @@ app.route("/api/shorturl").post(async (req, res) => {
   try {
     const parsedUrl = new URL(url);
     await dns.lookup(parsedUrl.hostname);
+
+    await UrlModel.create({
+      original_url: parsedUrl.toString(),
+      short_url: Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000,
+    });
 
     res.redirect("/");
   } catch (e) {
