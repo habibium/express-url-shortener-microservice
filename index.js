@@ -28,9 +28,9 @@ app.route("/api/shorturl/:id").get(async (req, res) => {
   if (isNaN(urlId)) return res.json(errRes("Wrong format"));
 
   const url = await findOneByUrlId(urlId);
-  if (!url) res.json(errRes("No short URL found for the given input"));
+  if (!url) return res.json(errRes("No short URL found for the given input"));
 
-  res.redirect(url?.original_url);
+  return res.redirect(url?.original_url);
 });
 
 app.route("/api/shorturl").post(async (req, res) => {
