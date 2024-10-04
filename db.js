@@ -42,6 +42,11 @@ const findOneByUrl = async (url) =>
     original_url: url,
   });
 
+const findOneByUrlId = async (id) =>
+  await UrlModel.findOne({
+    short_url: id,
+  });
+
 const findMostRecentUrl = async () => {
   const result = await UrlModel.find({}).sort("-_id").limit(1);
   return result[0];
@@ -51,5 +56,6 @@ module.exports = {
   UrlModel,
   insertUrl,
   findOneByUrl,
+  findOneByUrlId,
   findMostRecentUrl,
 };
