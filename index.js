@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { UrlModel, insertUrl } = require("./db");
+const { insertUrl, findOneByUrl, findMostRecentUrl } = require("./db");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -26,9 +26,7 @@ app.route("/api/shorturl").post(async (req, res) => {
     await dns.lookup(parsedUrl.hostname);
 
     // check if the url already exists
-    const alreadyCreatedUrl = await UrlModel.findOne({
-      original_url: parsedUrl.toString(),
-    });
+    const alreadyCreatedUrl = await findOneByUrl(parsedUrl.toString());
     // if exists, return the already created
     if (alreadyCreatedUrl)
       return res.json({
@@ -37,10 +35,9 @@ app.route("/api/shorturl").post(async (req, res) => {
       });
 
     // if not then get the last created url
-    const urls = await UrlModel.find({}).sort("-_id").limit(1);
+    const mostRecentUrl = await findMostRecentUrl();
     // use most recent (short_url + 1) or 0 as short_url if there are no documents
-    const short_url =
-      Array.isArray(urls) && urls.length > 0 ? urls[0].short_url + 1 : 0;
+    const short_url = mostRecentUrl ? mostRecentUrl.short_url + 1 : 0;
     const newUrl = await insertUrl(parsedUrl.toString(), short_url);
 
     return res.json({
