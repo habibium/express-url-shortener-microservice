@@ -68,6 +68,11 @@ app.route("/api/shorturl").post(async (req, res) => {
   }
 });
 
+// For loader.io
+app.get(`/${process.env.LOADERIO}`, (_, res) => {
+  res.sendFile(process.cwd() + `/public/${process.env.LOADERIO}`);
+});
+
 app.listen(port, function () {
   console.log(`Listening on http://localhost:${port}/`);
 });
