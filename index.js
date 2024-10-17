@@ -51,11 +51,8 @@ app.route("/api/shorturl").post(async (req, res) => {
         short_url: alreadyCreatedUrl?.short_url,
       });
 
-    // if not then get the last created url
-    const mostRecentUrl = await findMostRecentUrl();
-    // use most recent (short_url + 1) or 0 as short_url if there are no documents
-    const short_url = mostRecentUrl ? mostRecentUrl.short_url + 1 : 0;
-    const newUrl = await insertUrl(parsedUrl.toString(), short_url);
+    // If not, insert new URL
+    const newUrl = await insertUrl(parsedUrl.toString());
 
     return res.json({
       original_url: newUrl?.original_url,

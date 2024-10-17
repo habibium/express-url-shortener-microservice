@@ -26,16 +26,35 @@ const UrlSchema = mongoose.Schema({
   short_url: {
     type: Number,
     required: true,
+    unique: true,
   },
 });
 
+const CounterSchema = new mongoose.Schema({
+  _id: { type: String, required: true },
+  seq: { type: Number, default: 0 },
+});
+
+const Counter = mongoose.model("counter", CounterSchema);
+
 const UrlModel = mongoose.model("url", UrlSchema);
 
-const insertUrl = async (original_url, short_url) =>
-  await UrlModel.create({
+const getNextSequence = async (name) => {
+  const result = await Counter.findByIdAndUpdate(
+    name,
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+  return result.seq;
+};
+
+const insertUrl = async (original_url) => {
+  const short_url = await getNextSequence("url_count");
+  return await UrlModel.create({
     original_url,
     short_url,
   });
+};
 
 const findOneByUrl = async (url) =>
   await UrlModel.findOne({
